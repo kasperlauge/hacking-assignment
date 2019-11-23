@@ -1,7 +1,8 @@
 var url = 'https://ec2-54-188-28-123.us-west-2.compute.amazonaws.com:8080/';
-var uname = "au597939";
+var uname = "au526221";
 
 let startPass = "iiiiiiii";
+let passwdEstimate = "";
 
 var tryPromises = [];
 var tryTiming = [];
@@ -63,10 +64,6 @@ function tryPass(startIndex, maxInd, replInd, replMax, passSoFar, maxPassLength)
   });
 }
 
-tryPass(0x0000, 0x00ff, 0, 1, "", 8).then(pass => {
+tryPass(0x0000, 0x00ff, 0, 3, passwdEstimate, 8).then(pass => {
   console.log(pass);
 });
-
-function filterSignal(signal, repl) {
-  signal.reduce((prev, curr) => )
-}
