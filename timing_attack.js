@@ -62,15 +62,16 @@ function tryPass(startIndex, maxInd, replInd, replMax) {
   });
 }
 
-tryPass(0x0000, 0x00ff, 0, 2).then(res => {
+tryPass(0x0000, 0x00ff, 0, 3).then(res => {
   let averages = res.map(arr => [arr[0], arr[1].reduce((prev, curr) => prev + curr) / arr[1].length]);
   let topNumber = 10;
   let topTen = averages.reduce((prev, curr) => {
     if (prev.length < topNumber) {
       return [...prev, curr];
     } else {
-      let smallestInd = prev.indexOf(Math.min(...prev));
-      prev[smallestInd] = prev[smallestInd] > curr ? prev[smallestInd] : curr;
+      let smallestInd = prev.map(p => p[1]).indexOf(Math.min(...prev.map(p => p[1])));
+      let replaceMent = prev[smallestInd] > curr ? prev[smallestInd] : curr;
+      return [...prev.slice(0, smallestInd), replaceMent, ...prev.slice(smallestInd + 1)];
     }
   }, []);
   console.log(res);
